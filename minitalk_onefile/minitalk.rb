@@ -3,23 +3,27 @@
 str = ARGV[0]
 clientPid = Process.pid
 
+if str == nil then
+    abort "Enter args"
+end
+
 #server
 pid = fork do
     c = ""
     trap("USR1") do
+        c << "0"
         if (c.length >= 8) then
             print  "%c" % c.to_i(2)
             c = ""
         end
-        c << "0"
         Process.kill("USR1", clientPid)
     end
     trap("USR2") do
+        c << "1"
         if (c.length >= 8) then
             print  "%c" % c.to_i(2)
             c = ""
         end
-        c << "1"
         Process.kill("USR1", clientPid)
     end
 
